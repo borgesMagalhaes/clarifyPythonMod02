@@ -16,3 +16,4 @@ O conteúdo está organizado nas seguintes pastas:
 
 01_basico_python/: Fundamentos de Python (variáveis, tipos de dados, listas, loops, funções).
 02_pandas/: Manipulação de dados com Pandas (leitura de arquivos CSV, filtragem, agregação de dados).
+03_dash_plotly/: Manipulação de dados com dash e Plotly .
