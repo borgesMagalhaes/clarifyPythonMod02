@@ -1,6 +1,6 @@
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 from dash.dependencies import Input, Output
 
 import plotly.graph_objects as go
@@ -10,44 +10,45 @@ dados_conceito = {
     'java': {
         'variaveis': 8,
         'condicionais': 10,
-        'loops': 4,
+        'loops': 5,
         'poo': 5,
-        'funcoes': 4
+        'funcoes': 7
     },
     'python': {
         'variaveis': 10,
         'condicionais': 12,
         'loops': 6,
         'poo': 7,
-        'funcoes': 4
+        'funcoes': 3
     },
     "sql": {
         'variaveis': 2,
         'condicionais': 1,
         'loops': 1,
-        'poo': 0,
+        'poo': 1,
         'funcoes': 1
     },
     "golang": {
-        'variaveis': 9,
+        'variaveis': 3,
         'condicionais': 9,
         'loops': 9,
         'poo': 9,
         'funcoes': 9
     },
     "javascript": {
-        'variaveis': 8,
-        'condicionais': 10,
+        'variaveis': 4  ,
+        'condicionais': 7,
         'loops': 4,
         'poo': 3,
         'funcoes': 4
     }
 }
+
 #dic de cores
 cores_map=dict(
     java='red',
     python='blue',
-    sql='yellow',
+    sql='brown',
     golang='green',
     javascript='black'
 )
@@ -75,5 +76,40 @@ app.layout=html.Div([
     
 ],
 style={'width':'80%', 'margin':'0 auto'}
-
 )
+
+@app.callback(
+    Output('Gráfico Linguagens', 'figure'),
+    [Input('drpLinguaguem', 'value')]
+)
+
+def scarter_linguagem(linguagens_selecionadas):
+    
+    if not isinstance(linguagens_selecionadas, list):
+        linguagens_selecionadas = [linguagens_selecionadas]
+
+    scarter_trace = []
+    for linguagem in linguagens_selecionadas:
+        dados_linguagem = dados_conceito[linguagem]
+        for conceito, conhecimento in dados_linguagem.items():
+            scarter_trace.append(
+                go.Scatter(
+                    x=[conceito],
+                    y=[conhecimento],
+                    mode='markers',
+                    name=linguagem.title(),
+                    marker={'size': 15, 'color': cores_map[linguagem]},
+                    showlegend=False
+                )
+            )
+    
+    scarter_layout = go.Layout(
+        xaxis=dict(title='Conceitos', showgrid=False),
+        yaxis=dict(title='Nivel de Conhecimento', showgrid=False),
+        title='Conceitos de linguagens de programação'
+    )
+    
+    return {'data': scarter_trace, 'layout': scarter_layout}
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
