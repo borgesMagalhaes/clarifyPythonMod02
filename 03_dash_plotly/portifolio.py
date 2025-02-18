@@ -7,43 +7,12 @@ import plotly.graph_objects as go
 
 #json de dados de conceitos de linguagens
 dados_conceito = {
-    'java': {
-        'variaveis': 8,
-        'condicionais': 10,
-        'loops': 5,
-        'poo': 5,
-        'funcoes': 7
-    },
-    'python': {
-        'variaveis': 10,
-        'condicionais': 12,
-        'loops': 6,
-        'poo': 7,
-        'funcoes': 3
-    },
-    "sql": {
-        'variaveis': 2,
-        'condicionais': 1,
-        'loops': 1,
-        'poo': 1,
-        'funcoes': 1
-    },
-    "golang": {
-        'variaveis': 3,
-        'condicionais': 9,
-        'loops': 9,
-        'poo': 9,
-        'funcoes': 9
-    },
-    "javascript": {
-        'variaveis': 4  ,
-        'condicionais': 7,
-        'loops': 4,
-        'poo': 3,
-        'funcoes': 4
-    }
+    'java':         {'variaveis':8,'condicionais':10,'loops':5,'poo':5,'funcoes':7 },
+    'python':       {'variaveis':10,'condicionais':12,'loops':6,'poo':7,'funcoes':3},
+    "sql":          {'variaveis':2,'condicionais':1,'loops':1,'poo':1,'funcoes':1},
+    "golang":       {'variaveis':3, 'condicionais':9,'loops':9,'poo':9,'funcoes':9},
+    "javascript":   {'variaveis':4  ,'condicionais':7,'loops':4,'poo':3,'funcoes':4 }
 }
-
 #dic de cores
 cores_map=dict(
     java='red',
@@ -72,14 +41,14 @@ app.layout=html.Div([
         multi=True,
         style={'width':'50%', 'margin':'0 auto'}),
     ),
-    dcc.Graph(id='Gráfico Linguagens')
+    dcc.Graph(id='grafico_linguagem')
     
 ],
 style={'width':'80%', 'margin':'0 auto'}
 )
 
 @app.callback(
-    Output('Gráfico Linguagens', 'figure'),
+    Output('grafico_linguagem', 'figure'),
     [Input('drpLinguaguem', 'value')]
 )
 
