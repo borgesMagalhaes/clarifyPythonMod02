@@ -1,4 +1,5 @@
 import os
+import re
 import plotly.graph_objects as graph_obj
 import plotly.express as px
 import pandas as pd
@@ -9,7 +10,6 @@ from dash.dependencies import Input, Output
 from dash import dcc, html, Input, Output
 
 import os
-
 #fixando o diretório de trabalho para evitar erro de [Errno 2] No such file or directory: 'dataset_comp.csv'
 os.chdir(os.path.dirname(__file__))  # Change to script's directory
 
@@ -113,6 +113,7 @@ layout_titulo = html.Div([
     'font-family': 'Fira Code',
     'margin-top': '20px'
  })
+
 layout_linha01 = html.Div([  
     html.Div([
         html.H4(id='output_cliente'),
@@ -140,6 +141,7 @@ layout_linha01 = html.Div([
     'justify-content': 'space-around',
     'margin-top': '40px',
     'height': '300px'})
+
 layout_linha02 = html.Div([  
     html.Div([  
         html.H4('Vendas por Mês e Loja/Cidade'),
@@ -235,7 +237,7 @@ def visual01(cliente, mes, categoria, toggle):
         y='Total Vendas',
         color='Total Vendas',
         text='Total Vendas',
-        color_continuous_scale='blue',
+        color_continuous_scale='blues',
         height=280,
         template=template
     )
@@ -262,6 +264,44 @@ def visual01(cliente, mes, categoria, toggle):
         Input(ThemeSwitchAIO.ids.switch('theme'), 'value')
     ]
 )
+
+def visual02(mes, categoria, toggle):
+    #SECTION - Atualizar o tema do Dash App com o Dash Bootstrap Components e o Dash Bootstrap Templates
+    template = dark_theme if toggle else vapor_theme
+    
+    #SECTION - Filtro de Mês e Categoria
+    nomeMes = filtro_mes(mes)
+    nomeCategoria = filtro_categoria(categoria)
+    
+    mesCategoria = nomeMes & nomeCategoria
+    
+    #SECTION - Filtrar o DataFrame
+    df2 = df.loc[nomeCategoria]  
+    df3 = df.loc[mesCategoria]
+    
+    #SECTION - Agrupar por Mês e Loja
+    dfVendasMesLoja02 = df2.groupby(['Mes', 'Loja'])['Total Vendas'].sum().reset_index()
+    dfVendasMesLoja03 = df3.groupby(['Mes', 'Loja'])['Total Vendas'].sum().reset_index()
+    
+    maxSize = dfVendasMesLoja02['Total Vendas'].max()
+    minSize = dfVendasMesLoja02['Total Vendas'].min()
+    
+    ordemMes = [
+        'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'
+    ]
+    
+    #SECTION - definindo as cores  do gráfico
+    coresLojas = {
+        'Rio de Janeiro' : 'rgb(0, 0, 255)',
+        'Salvador' : 'rgb(255, 0, 0)',
+        'Santos' : 'rgb(0, 255, 0)',
+        'São Paulo' : 'rgb(255, 255, 0)',
+        'Três Rios' : 'rgb(255, 0, 255)'
+    }
+    
+    #SECTION - Criando o gráfico de barras
+    
+
 #executa o server e o app se o arquivo for executado diretamente
 if __name__ == '__main__':
     app.run_server(debug=True)
