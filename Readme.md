@@ -27,6 +27,7 @@ Manipulação de dados com Pandas, incluindo:
 Leitura de arquivos CSV;
 Filtragem e agregação de dados;
 Tratamento de valores nulos e preenchimento de dados ausentes.
+
 📌 03_dash_plotly/
 Criação de visualizações interativas utilizando Dash e Plotly.
 
