@@ -209,7 +209,32 @@ def atualizar_texto(cliente_selecionado, categoria_selecionada):
         Input(ThemeSwitchAIO.ids.switch('theme'), 'value')
     ]
 )
-        
+
+def visual01(cliente, mes, categoria, toggle):
+    template = dark_theme if toggle else vapor_theme
+
+    nomeCliente = filtro_cliente(cliente)
+    nomeCategoria = filtro_categoria(categoria)
+    nomeMes = filtro_mes(mes)
+    
+    cliente_mes_categoria = nomeCliente & nomeMes & nomeCategoria
+    dfFiltrado = df.loc[cliente_mes_categoria]
+    
+    dfGrupo = dfFiltrado.groupby(['Produto', 'Categorias'])['Total Vendas'].sum().reset_index()
+    dfTop5 = dfGrupo.sort_values(by='Total Vendas', ascending=False).head(5)
+
+#Criando o gráfico de barras
+    fig = px.bar(
+        data_frame=dfTop5,
+        x='Produto',
+        y='Total Vendas',
+        color='Total Vendas',
+        text='Total Vendas',
+        color_continuous_scale='blues',
+        template=template,
+        height=280
+    )
+            
 #executa o server e o app se o arquivo for executado diretamente
 if __name__ == '__main__':
     app.run_server(debug=True)
