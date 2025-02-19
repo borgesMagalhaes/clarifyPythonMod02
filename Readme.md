@@ -59,8 +59,12 @@ Exibe gráficos de vendas por cliente, mês e cidade.
   cd introducao-python
 
 2️⃣ Instalar Dependências
-  python.exe -m pip install --upgrade pip
-  pip install -r requirements.txt
+  ✅ Usando o script automático (install.bat) no Windows:
+        install.bat
+  
+  ✅ Executando os comandos manualmente:
+      python.exe -m pip install --upgrade pip
+      pip install -r requirements.txt
 
 3️⃣ Executar os Scripts
 Para rodar a aplicação do Dash:

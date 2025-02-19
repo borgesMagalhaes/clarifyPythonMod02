@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "clearTerminal",
+            "type": "shell",
+            "command": "cls", 
+            "windows": {
+                "command": "cls"
+            },
+            "linux": {
+                "command": "clear"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

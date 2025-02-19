@@ -8,6 +8,11 @@ from dash_bootstrap_templates import ThemeSwitchAIO
 from dash.dependencies import Input, Output
 from dash import dcc, html, Input, Output
 
+import os
+
+#fixando o diretório de trabalho para evitar erro de [Errno 2] No such file or directory: 'dataset_comp.csv'
+os.chdir(os.path.dirname(__file__))  # Change to script's directory
+
 #Configurando o tema do Dash App com o Dash Bootstrap Components e o Dash Bootstrap Templates
 dark_theme = 'darkly'
 vapor_theme = 'vapor'
@@ -246,7 +251,17 @@ def visual01(cliente, mes, categoria, toggle):
         plot_bgcolor = 'rgb(0,0,0,0)',
         paper_bgcolor = 'rgb(0,0,0,0)'
     )
-            
+    return fig
+
+@app.callback(
+    Output('visual02', 'figure'),
+    Output('visual03', 'figure'),
+    [
+        Input('chkMes', 'value'),
+        Input('rdCategoria', 'value'),
+        Input(ThemeSwitchAIO.ids.switch('theme'), 'value')
+    ]
+)
 #executa o server e o app se o arquivo for executado diretamente
 if __name__ == '__main__':
     app.run_server(debug=True)
