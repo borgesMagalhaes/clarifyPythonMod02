@@ -1,5 +1,8 @@
+from calendar import c
 import os
 import re
+from flask.cli import F
+from matplotlib.pyplot import margins, plot, show
 import plotly.graph_objects as graph_obj
 import plotly.express as px
 import pandas as pd
@@ -9,7 +12,6 @@ from dash_bootstrap_templates import ThemeSwitchAIO
 from dash.dependencies import Input, Output
 from dash import dcc, html, Input, Output
 
-import os
 #fixando o diretório de trabalho para evitar erro de [Errno 2] No such file or directory: 'dataset_comp.csv'
 os.chdir(os.path.dirname(__file__))  # Change to script's directory
 
@@ -299,8 +301,74 @@ def visual02(mes, categoria, toggle):
         'Três Rios' : 'rgb(255, 0, 255)'
     }
     
-    #SECTION - Criando o gráfico de barras
+    #SECTION - Criando o gráfico visual02
+    fig2 = graph_obj.Figure()
     
+    for loja in dfVendasMesLoja02['Loja'].unique():
+        dfLoja = dfVendasMesLoja02[dfVendasMesLoja02['Loja'] == loja]
+        cor = coresLojas.get(loja, 'black')
+
+        fig2.add_trace(
+            graph_obj.Scatter(
+                x = dfLoja['Mes'],
+                y =  dfLoja['Total Vendas'],
+                mode= 'markers',
+                marker= dict(
+                    color = cor,
+                    size =  (dfLoja['Total Vendas'] - minSize) / 
+                            (maxSize - minSize) * 50, 
+                    opacity=0.5,
+                    line=dict(color=cor, width=0)
+                ),
+                name=str(loja)
+            )
+        )
+    fig2.update_layout(
+        margin=dict(t=0),
+        template=template,
+        plot_bgcolor = 'rgba(0,0,0,0)',
+        paper_bgcolor = 'rgba(0,0,0,0)',
+        xaxis=dict(
+            categoryorder='array',
+            categoryarray=ordemMes,
+            showgrid=False
+        ),
+        yaxis=dict(showgrid=False)
+    )
+
+    #SECTION - Criando o gráfico visual03
+    fig3 = graph_obj.Figure(data=graph_obj.Scatterpolar(
+        r = dfVendasMesLoja03['Total Vendas'],
+        theta= dfVendasMesLoja03['Loja'],
+        fill='toself',
+        line=dict(color='rgb(31, 119, 180)'),
+        marker=dict(color='rgb(31, 119, 180)', size=8),
+        opacity=0.7
+    ))
+
+    fig3.update_layout(
+        template=template,
+        polar= dict(
+            radialaxis=dict(
+                visible=True,
+                tickfont=dict(size=10),
+                tickangle=0,
+                tickcolor='rgba(68,68,68,0)',
+                ticklen= 5,
+                tickwidth=1,
+                tickprefix='',
+                ticksuffix='',
+                #SECTION - Definindo o range do eixo radial do gráfico visual03 
+                range=[0, max(dfVendasMesLoja03['Total Vendas']) + 1000]
+            )
+        ),
+        font=dict(family='Fira Code', size=12),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=40, r=40, t=80, b=40)
+    )
+    
+    return fig2, fig3
 
 #executa o server e o app se o arquivo for executado diretamente
 if __name__ == '__main__':
