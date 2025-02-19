@@ -24,9 +24,6 @@ url_vapor_theme = dbc.themes.VAPOR
 #importando dados do csv dataset_comp.csv
 df = pd.read_csv('dataset_comp.csv')
 
-# file_path = os.path.join(os.getcwd(), 'dataset_comp.csv')
-# df = pd.read_csv(file_path)
-
 #Transformando a coluna dt_Venda em datetime
 df['dt_Venda']=pd.to_datetime(df['dt_Venda'])
 
