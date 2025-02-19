@@ -35,6 +35,7 @@ Criação de visualizações interativas utilizando Dash e Plotly.
 Manipulação de arquivos CSV e criação de filtros avançados para visualizações.
 
 📄 Arquivos Principais
+
 🔹 readCsv.py
 Script para leitura e manipulação de dados de arquivos CSV. Ele:
 
@@ -42,38 +43,60 @@ Lê arquivos CSV de hospedagens em Nova York e Rio de Janeiro;
 Faz o tratamento de dados, convertendo datas e preenchendo valores ausentes;
 Ajusta preços com base no ano;
 Gera estatísticas descritivas sobre os dados.
+
 🔹 portifolio.py
+
 Aplicação interativa utilizando Dash e Plotly, que exibe conceitos sobre linguagens de programação. Possui:
 
 Um dropdown para seleção de linguagem;
+
 Um gráfico de dispersão mostrando o nível de conhecimento nos conceitos principais (variáveis, condicionais, loops, POO, funções).
+
 🔹 main_store.py
+
 Painel interativo para análise de vendas, utilizando Dash e Dash Bootstrap Components. Ele:
 
 Carrega dados de vendas a partir de um CSV;
+
 Permite filtragem por cliente, categoria de produto e mês de venda;
+
 Exibe gráficos de vendas por cliente, mês e cidade.
 
 🔧 Como Usar
+
 1️⃣ Clonar o Repositório
+
   git clone https://github.com/seu_usuario/introducao-python.git
+
   cd introducao-python
 
 2️⃣ Instalar Dependências
+
   ✅ Usando o script automático (install.bat) no Windows:
+
         install.bat
   
   ✅ Executando os comandos manualmente:
+
       python.exe -m pip install --upgrade pip
+
       pip install -r requirements.txt
 
 3️⃣ Executar os Scripts
+
 Para rodar a aplicação do Dash:
+
   python portifolio.py
+
   ou
+
   python main_store.py
+
   ou
+
   python readCsv.py
+
   
 🚀 Contribuições
+
 Sinta-se à vontade para contribuir! Se quiser sugerir melhorias, abra um Pull Request ou Issue.
