@@ -225,14 +225,26 @@ def visual01(cliente, mes, categoria, toggle):
 
 #Criando o gráfico de barras
     fig = px.bar(
-        data_frame=dfTop5,
+        dfTop5,
         x='Produto',
         y='Total Vendas',
         color='Total Vendas',
         text='Total Vendas',
-        color_continuous_scale='blues',
-        template=template,
-        height=280
+        color_continuous_scale='blue',
+        height=280,
+        template=template
+    )
+    fig.update_traces(texttemplate='%{text:.2s}', textposition='outside')
+    fig.update_layout(
+        margin=dict(t=0),
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False, range=[dfTop5['Total Vendas'].min()*0,dfTop5['Total Vendas'].max()*1.2]),
+        xaxis_title = None,
+        yaxis_title = None,
+        xaxis_tickangle = -15,
+        font=dict(size=15),
+        plot_bgcolor = 'rgb(0,0,0,0)',
+        paper_bgcolor = 'rgb(0,0,0,0)'
     )
             
 #executa o server e o app se o arquivo for executado diretamente

@@ -59,6 +59,7 @@ Exibe gráficos de vendas por cliente, mês e cidade.
   cd introducao-python
 
 2️⃣ Instalar Dependências
+  python.exe -m pip install --upgrade pip
   pip install -r requirements.txt
 
 3️⃣ Executar os Scripts
