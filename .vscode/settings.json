@@ -2,5 +2,6 @@
     "python.analysis.autoImportCompletions": true,
     "python.analysis.typeCheckingMode": "standard",
     "code-runner.clearPreviousOutput": true, // Clears terminal output for Code Runner
-    "terminal.integrated.clearBeforeRun": true // Custom setting to clear before running
+    "terminal.integrated.clearBeforeRun": true ,// Custom setting to clear before running
+    "python.languageServer": "Pylance"
 }

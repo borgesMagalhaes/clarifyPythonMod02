@@ -3,8 +3,9 @@ import random as rd
 import os
 from datetime import datetime, timedelta
 
-#fixando o diretório de trabalho para evitar erro de [Errno 2] No such file or directory: 'dataset_comp.csv'
-os.chdir(os.path.dirname(__file__))  
+# fixando o diretório de trabalho para evitar erro de [Errno 2] No such file or directory: 'dataset_comp.csv'
+os.chdir(os.path.dirname(__file__))
+
 
 def gerarDadoVenda(numLinha):
     produto = ["Produto A", "Produto B", "Produto C", "Produto D"]
@@ -23,13 +24,10 @@ def gerarDadoVenda(numLinha):
     return pd.DataFrame(dado, columns=["Produto", "Regiao", "Valor", "Data"])
 
 
-dfVenda = gerarDadoVenda(999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999)
+dfVenda = gerarDadoVenda(
+    999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
+)
 
 dfVenda.to_csv("vendas.csv", index=False)
 
 print("Arquivo Gerado com sucesso")
-
-
-
-
-
