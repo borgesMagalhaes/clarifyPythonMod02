@@ -3,6 +3,7 @@ import io
 from typing import Self
 import dash
 import os
+from matplotlib import markers
 from numpy import astype
 import pandas as pd
 import plotly.express as px
@@ -19,6 +20,10 @@ os.chdir(os.path.dirname(__file__))
 app = dash.Dash(__name__)
 
 df = pd.read_csv("vendas.csv")
+print(os.getcwd())  # Verifica o diretório atual
+print(os.listdir())  # Lista os arquivos na pasta
+print(df.head())  # Exibe as primeiras linhas do dataframe
+print(df.columns)  #
 
 
 class analisaVenda:
@@ -27,7 +32,12 @@ class analisaVenda:
         self.limpaDado()
 
     def limpaDado(self):
-        self.dado["data"] = pd.to_datetime(self.dado["data"], errors="coerce")
+
+        df["data"] = pd.to_datetime(df["data"], errors="coerce")
+        df.dropna(subset=["data"], inplace=True)  # Remove possíveis valores NaT
+        print(df["data"].dtypes)
+        print(df["data"].head())  # Veja os primeiros valores
+
         self.dado["valor"] = pd.to_numeric(self.dado["valor"], errors="coerce")
         self.dado["mes"] = self.dado["data"].dt.month
         self.dado["ano"] = self.dado["data"].dt.year
@@ -49,21 +59,73 @@ class analisaVenda:
         )
         return fig
 
-    def analisaVendaRegiao(self, regiaoFiltrado):
-        dfRegiao = self.dado[self.dado["regiao"].isin(regiaoFiltrado)]
-        dfRegiao = (
-            dfRegiao.groupby("regiao")["valor"]
+    def analiseVendaRegiao(self, regioes_filtradas):
+        df_regiao = self.dado[self.dado["regiao"].isin(regioes_filtradas)]
+        df_regiao = (
+            df_regiao.groupby("regiao")["valor"]
             .sum()
             .reset_index()
             .sort_values(by="valor", ascending=False)
         )
         fig = px.pie(
-            dfRegiao,
-            values="valor",
+            df_regiao,
             names="regiao",
-            title="Vendas por Regiao",
+            values="valor",
+            title="Vendas por Região",
             color="valor",
         )
+        return fig
+
+    def analiseVendaMensal(self, anoFiltrado):
+        dfMes = self.dado[self.dado["ano"] == anoFiltrado]
+        dfMes = dfMes.groupby(["mes", "ano"])["valor"].sum().reset_index()
+        fig = px.line(
+            dfMes,
+            x="mes",
+            y="valor",
+            title=f"Vendas por Mes - {anoFiltrado}",
+            color="ano",
+            markers=True,
+            line_shape="spline",
+        )
+        return fig
+
+    def analiseVendaDiaria(self, data_inicio, data_fim):
+        dfDia = self.dado[
+            (self.dado["data"] >= data_inicio) & (self.dado["data"] <= data_fim)
+        ]
+        dfDia = dfDia.groupby("data")["valor"].sum().reset_index()
+        fig = px.line(
+            dfDia,
+            x="data",
+            y="valor",
+            title=f"Vendas por Dia ",
+            color="valor",
+            markers=True,
+        )
+        return fig
+
+    def analiseVendaDiaSemana(self):
+        dfDiaSemana = self.dado.groupby("diaSemana")["valor"].sum().reset_index()
+        dfDiaSemana["diaSemana"] = dfDiaSemana["diaSemana"].map(
+            {
+                0: "Domingo",
+                1: "Segunda",
+                2: "Terca",
+                3: "Quarta",
+                4: "Quinta",
+                5: "Sexta",
+                6: "Sabado",
+            }
+        )
+        fig = px.bar(
+            dfDiaSemana,
+            x="diaSemana",
+            y="valor",
+            title="Vendas por Dia da Semana",
+            color="valor",
+        )
+
         return fig
 
 
@@ -130,6 +192,27 @@ app.layout = html.Div(
                 )
             ]
         ),
+        html.Div(
+            [
+                dcc.Graph(
+                    id="graphMensal",
+                )
+            ]
+        ),
+        html.Div(
+            [
+                dcc.Graph(
+                    id="graphVendaDiaria",
+                )
+            ]
+        ),
+        html.Div(
+            [
+                dcc.Graph(
+                    id="graphDiaSemana",
+                )
+            ]
+        ),
     ]
 )
 
@@ -138,25 +221,58 @@ app.layout = html.Div(
 @app.callback(
     Output("graphProduto", "figure"),
     Output("graphRegiao", "figure"),
+    Output("graphMensal", "figure"),
+    Output("graphVendaDiaria", "figure"),
+    Output("graphDiaSemana", "figure"),
     Input("drpProduto", "value"),
     Input("drpRegiao", "value"),
     Input("drpAno", "value"),
     Input("drpPeriodo", "start_date"),
     Input("drpPeriodo", "end_date"),
 )
+def test_callback(produtos, regioes, ano, start_date, end_date):
+    print("Callback Teste chamado com:", produtos, regioes, ano, start_date, end_date)
+    return go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure()
+
+
 def upgrade_graphs(produtos, regioes, ano, start_date, end_date):
     try:
+
         start_date = pd.to_datetime(start_date)
         end_date = pd.to_datetime(end_date)
 
-        fig_regiao = analisa.analisaVendaRegiao(regioes)
-        fig_produto = analisa.analisaVendaProduto(produtos)
-        return fig_produto, fig_regiao
+        ano = ano
+
+        figProduto = analisa.analisaVendaProduto(produtos)
+        figRegiao = analisa.analiseVendaRegiao(regioes)
+        figMensal = analisa.analiseVendaMensal(ano)
+        figVendaDiaria = analisa.analiseVendaDiaria(start_date, end_date)
+        figDiaSemana = analisa.analiseVendaDiaSemana()
+
+        print("🚀 Callback foi chamado!")
+        print(
+            f"Produtos: {produtos}, Regiões: {regioes}, Ano: {ano}, Datas: {start_date} - {end_date}"
+        )
+
+        print(
+            "Callback disparado com valores:",
+            produtos,
+            regioes,
+            ano,
+            start_date,
+            end_date,
+        )
+
+        return figProduto, figRegiao, figMensal, figVendaDiaria, figDiaSemana
 
     except Exception as e:
 
         print(f"Erro ao atualizar os gráficos: {str(e)}")
-        return go.Figure()
+        import traceback
+
+        print("ERRO NO CALLBACK")
+        print(traceback.format_exc())  # Exibe detalhes do erro
+        return go.Figure(), go.Figure(), go.Figure(), go.Figure(), go.Figure()
 
 
 # Rodar o app
